@@ -5,8 +5,8 @@ image_resource:
   type: docker-image
   source: {repository: python}
 
-inputs:
-  - name: 01-pipe-git
+#inputs:
+#  - name: 01-pipe-git
 
 run:
   path: sh

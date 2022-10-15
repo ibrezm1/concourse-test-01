@@ -9,8 +9,8 @@ resources:
 - name: resource-tutorial
   type: git
   source:
-    uri: https://github.com/starkandwayne/concourse-tutorial.git
-    branch: develop
+    uri: https://github.com/ibrezm1/concourse-test-01.git
+    branch: main
 # https://concourse-ci.org/hooks-example.html
 
 jobs:
@@ -18,8 +18,8 @@ jobs:
   public: true
   plan:
   - get: resource-tutorial
-  - task: hello-world
-    file: resource-tutorial/tutorials/basic/task-hello-world/task_hello_world.yml
+  - task: execute-git-script
+    file: resource-tutorial//01-pipe-git/task-in-git.yml
     on_success:
       task: task-success
       config:
