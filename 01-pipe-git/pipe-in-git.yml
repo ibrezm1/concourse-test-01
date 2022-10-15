@@ -34,7 +34,7 @@ jobs:
       image_resource:
         type: registry-image
         source:
-          repository: busybox
+          repository: python
       inputs: # pass concourse-examples into this task step
       - name: concourse-examples
       run:
@@ -46,6 +46,9 @@ jobs:
           echo username: ((dumb:user.username))
           whoami
           cat concourse-examples/Readme.md
+          find .
+          python concourse-examples/01-pipe-git/python-version.py
+          pwd
     on_success:
       task: task-success
       config:
