@@ -42,7 +42,7 @@ jobs:
         args:
         - -exc
         - |
-          echo simple: ((dumb:simple))
+          echo simple: ((dumb:simple)) 
           echo username: ((dumb:user.username))
           whoami
           cat concourse-examples/Readme.md
