@@ -35,7 +35,7 @@ jobs:
 - name: dread-the-readme
   plan:
   - get: concourse-examples
-    trigger: true
+    trigger: false
   - task: cat-readme
     config:
       platform: linux
@@ -111,7 +111,7 @@ jobs:
 - name: sread-the-readme
   plan:
   - get: concourse-examples
-    trigger: true
+    trigger: false
   - task: cat-readme
     config:
       platform: linux
