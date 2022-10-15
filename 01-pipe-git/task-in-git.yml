@@ -4,7 +4,7 @@ platform: linux
 image_resource:
   type: docker-image
   source: {repository: busybox}
-
+  # Should have the same image as the parent pipeline for passing input to work
 inputs:
   - name: resource-tutorial
 
