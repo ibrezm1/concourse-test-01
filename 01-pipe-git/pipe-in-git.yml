@@ -51,6 +51,11 @@ jobs:
           find .
           pwd
           env
+
+- name: read-the-breadme
+  plan:
+  - get: concourse-examples
+    trigger: false
   - task: bat-readme
     config:
       platform: linux
