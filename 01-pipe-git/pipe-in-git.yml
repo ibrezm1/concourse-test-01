@@ -40,20 +40,20 @@ jobs:
       image_resource:
         type: registry-image
         source:
-          repository: python
+          repository: busybox  # change to python
       inputs: # pass concourse-examples into this task step
       - name: concourse-examples
       run:
         path: sh
+        # python concourse-examples/01-pipe-git/python-version.py
         args:
         - -exc
         - |
           echo simple: ((dumb:simple)) 
           echo username: ((dumb:user.username))
           whoami
-          cat concourse-examples/Readme.md
+          cat concourse-examples/Readme.md  
           find .
-          python concourse-examples/01-pipe-git/python-version.py
           pwd
           env
     on_success:
