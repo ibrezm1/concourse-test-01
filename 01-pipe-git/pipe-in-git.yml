@@ -51,13 +51,22 @@ jobs:
           find .
           pwd
           env
-      params:
-        SOME_SIMPLE_VAR: simple-var
-        SOME_LONG_VAR: |
-          This is an example of using YAML multi-line string syntax to set a very
-          long environment variable value.
-        SOME_NUMERIC_VALUE: "1"
-
+  - task: bat-readme
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: busybox  # change to python
+      inputs: # pass concourse-examples into this task step
+      - name: concourse-examples
+      run:
+        path: sh
+        # python concourse-examples/01-pipe-git/python-version.py
+        args:
+        - -exc
+        - |
+          whoami
     on_success:
       task: task-success
       config:
