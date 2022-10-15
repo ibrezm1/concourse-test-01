@@ -14,6 +14,12 @@ var_sources:
       user:
         username: big
         password: sekrit
+    env-vars:
+      SOME_SIMPLE_VAR: simple-var
+      SOME_LONG_VAR: |
+        This is an example of using YAML multi-line string syntax to set a very
+        long environment variable value.
+      SOME_NUMERIC_VALUE: "1"
 
 resources:
 - name: concourse-examples
