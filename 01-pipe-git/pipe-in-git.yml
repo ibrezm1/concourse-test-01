@@ -49,6 +49,7 @@ jobs:
           find .
           python concourse-examples/01-pipe-git/python-version.py
           pwd
+          env
     on_success:
       task: task-success
       config:
