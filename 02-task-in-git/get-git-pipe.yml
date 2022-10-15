@@ -1,4 +1,5 @@
 ---
+# fly -t tutorial set-pipeline -p pipeline-res1 -c 02-task-in-git/get-git-pipe.yml
 task-config: &task-config
   platform: linux
   image_resource:
@@ -19,7 +20,7 @@ jobs:
   plan:
   - get: resource-tutorial
   - task: execute-git-script
-    file: resource-tutorial/01-pipe-git/task-in-git.yml
+    file: resource-tutorial/02-task-in-git/task-in-git.yml
     on_success:
       task: task-success
       config:

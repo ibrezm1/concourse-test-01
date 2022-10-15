@@ -1,4 +1,5 @@
 ---
+# fly -t tutorial set-pipeline -p pipeline-res -c 01-pipe-git/pipe-in-git.yml 
 groups:
 - name: dev
   jobs: [dread-the-readme, dread-the-breadme]
