@@ -1,4 +1,11 @@
 ---
+groups:
+- name: dev
+  jobs: [dread-the-readme, dread-the-breadme]
+- name: stg
+  jobs: [sread-the-readme, sread-the-breadme]
+
+
 task-config: &task-config
   platform: linux
   image_resource:
@@ -25,7 +32,7 @@ resources:
     branch: main
 
 jobs:
-- name: read-the-readme
+- name: dread-the-readme
   plan:
   - get: concourse-examples
     trigger: true
@@ -52,7 +59,7 @@ jobs:
           pwd
           env
 
-- name: read-the-breadme
+- name: dread-the-breadme
   plan:
   - get: concourse-examples
     trigger: false
@@ -100,3 +107,81 @@ jobs:
       run:
         path: echo
         args: ["This job failed!"]
+
+- name: sread-the-readme
+  plan:
+  - get: concourse-examples
+    trigger: true
+  - task: cat-readme
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: busybox  # change to python
+      inputs: # pass concourse-examples into this task step
+      - name: concourse-examples
+      run:
+        path: sh
+        # python concourse-examples/01-pipe-git/python-version.py
+        args:
+        - -exc
+        - |
+          echo simple: ((dumb:simple)) 
+          echo username: ((dumb:user.username))
+          whoami
+          cat concourse-examples/Readme.md  
+          find .
+          pwd
+          env
+
+- name: sread-the-breadme
+  plan:
+  - get: concourse-examples
+    trigger: false
+  - task: bat-readme
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: busybox  # change to python
+      inputs: # pass concourse-examples into this task step
+      - name: concourse-examples
+      run:
+        path: sh
+        # python concourse-examples/01-pipe-git/python-version.py
+        args:
+        - -exc
+        - |
+          whoami
+    on_success:
+      task: task-success
+      config:
+        << : *task-config
+        run:
+          path: echo
+          args: ["This task succeeded!"]
+    on_failure:
+      task: task-failure
+      config:
+        << : *task-config
+        run:
+          path: echo
+          args: ["This task failed!"]
+  on_success:
+    task: job-success
+    config:
+      << : *task-config
+      run:
+        path: echo
+        args: ["This job succeeded!"]
+  on_failure:
+    task: job-failure
+    config:
+      << : *task-config
+      run:
+        path: echo
+        args: ["This job failed!"]
+
+
