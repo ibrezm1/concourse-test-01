@@ -1,0 +1,60 @@
+groups:
+  - name: dep-files-stg
+    jobs:
+      - job-test-app
+  - name: dep-files-prd
+    jobs:
+      - minio-s3-write-it-out
+resources:
+  - name: concourse-tutorial
+    type: git
+    source:
+      uri: 'https://github.com/ruanbekker/concourse-tutorial.git'
+      branch: master
+  - name: python-tests-repo
+    type: git
+    source:
+      uri: 'https://github.com/ruanbekker/concourse-tutorial.git'
+      branch: python-tests
+  - name: mock
+    type: mock-resource
+jobs:
+  - name: job-test-app
+    public: true
+    plan:
+      - get: concourse-tutorial
+      - get: python-tests-repo
+        trigger: true
+      - task: return-random-message
+        file: concourse-tutorial/06-input-jobs-pipeline/task_run_tests.yml
+      - task: run-version
+        config:
+          platform: linux
+          image: busybox-resource
+          inputs:
+            - name: python-tests-repo
+          run:
+            path: entrypoint.sh
+            args:
+              - Hello
+  - name: minio-s3-write-it-out
+    plan:
+      - task: cat-example-file
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: alpine
+          run:
+            path: sh
+            args:
+              - '-c'
+              - >-
+                echo "$BUILD_NAME This is an example file, created $(date)" >
+                file-to-upload/example-file-1.txt
+          outputs:
+            - name: file-to-upload
+      - put: mock
+        params:
+          file: file-to-upload/example-file-*

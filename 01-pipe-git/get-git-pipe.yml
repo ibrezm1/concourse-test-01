@@ -1,0 +1,50 @@
+---
+task-config: &task-config
+  platform: linux
+  image_resource:
+    type: registry-image
+    source: { repository: busybox }
+
+resources:
+- name: resource-tutorial
+  type: git
+  source:
+    uri: https://github.com/starkandwayne/concourse-tutorial.git
+    branch: develop
+# https://concourse-ci.org/hooks-example.html
+
+jobs:
+- name: job-hello-world
+  public: true
+  plan:
+  - get: resource-tutorial
+  - task: hello-world
+    file: resource-tutorial/tutorials/basic/task-hello-world/task_hello_world.yml
+    on_success:
+      task: task-success
+      config:
+        << : *task-config
+        run:
+          path: echo
+          args: ["This task succeeded!"]
+    on_failure:
+      task: task-failure
+      config:
+        << : *task-config
+        run:
+          path: echo
+          args: ["This task failed!"]
+  on_success:
+    task: job-success
+    config:
+      << : *task-config
+      run:
+        path: echo
+        args: ["This job succeeded!"]
+  on_failure:
+    task: job-failure
+    config:
+      << : *task-config
+      run:
+        path: echo
+        args: ["This job failed!"]
