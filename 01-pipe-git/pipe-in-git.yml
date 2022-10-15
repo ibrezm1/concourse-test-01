@@ -1,3 +1,20 @@
+---
+task-config: &task-config
+  platform: linux
+  image_resource:
+    type: registry-image
+    source: { repository: busybox }
+
+var_sources:
+- name: dumb
+  type: dummy
+  config:
+    vars:
+      simple: hello!
+      user:
+        username: big
+        password: sekrit
+
 resources:
 - name: concourse-examples
   type: git
@@ -10,6 +27,7 @@ jobs:
 - name: read-the-readme
   plan:
   - get: concourse-examples
+    trigger: true
   - task: cat-readme
     config:
       platform: linux
@@ -20,5 +38,37 @@ jobs:
       inputs: # pass concourse-examples into this task step
       - name: concourse-examples
       run:
-        path: cat
-        args: ["concourse-examples/README.md"]
+        path: sh
+        args:
+        - -exc
+        - |
+          whoami
+          cat concourse-examples/Readme.md
+    on_success:
+      task: task-success
+      config:
+        << : *task-config
+        run:
+          path: echo
+          args: ["This task succeeded!"]
+    on_failure:
+      task: task-failure
+      config:
+        << : *task-config
+        run:
+          path: echo
+          args: ["This task failed!"]
+  on_success:
+    task: job-success
+    config:
+      << : *task-config
+      run:
+        path: echo
+        args: ["This job succeeded!"]
+  on_failure:
+    task: job-failure
+    config:
+      << : *task-config
+      run:
+        path: echo
+        args: ["This job failed!"]
