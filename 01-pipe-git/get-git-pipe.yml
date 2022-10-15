@@ -19,7 +19,7 @@ jobs:
   plan:
   - get: resource-tutorial
   - task: execute-git-script
-    file: resource-tutorial//01-pipe-git/task-in-git.yml
+    file: resource-tutorial/01-pipe-git/task-in-git.yml
     on_success:
       task: task-success
       config:
