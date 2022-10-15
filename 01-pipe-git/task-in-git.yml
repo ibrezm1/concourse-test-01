@@ -14,6 +14,7 @@ run:
   - -exc
   - |
     whoami
+    pwd
     env
     find .
     python ./01-pipe-git/python-version.py
